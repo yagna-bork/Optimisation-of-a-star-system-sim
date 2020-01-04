@@ -2,7 +2,7 @@
 
 C code that runs a star system based on parameters you give it in the command line
 It's been heavily optimised with parallelisation and vectorisation along with cache optimisation to run as many stars at once as possible
-High end machines can achieve up-to 100,000s of stars with reasonable speeds. 
+High end machines can achieve up to 100,000s of stars with reasonable speeds. 
 
 # How do I get it running?
 
