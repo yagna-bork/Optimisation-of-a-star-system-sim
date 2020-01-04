@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+make
+
+iter=$1
+stars=$2
+steps=$3
+
+
+total_gflops=0
+# total_loop
+loop_zero_seconds_total=0
+loop_one_seconds_total=0
+loop_two_seconds_total=0
+loop_three_seconds_total=0
+total_seconds_total=0
+gflops_total=0
+gbs_total=0
+answer_total=0
+
+for ((i=0; i<$iter; i++))
+do
+  output=`./cs257 $stars $steps 0`
+  loop_zero_seconds=`echo $output | awk  'BEGIN { FS = " " } ; { print $16 }'`
+  loop_one_seconds=`echo $output | awk  'BEGIN { FS = " " } ; { print $21 }'`
+  loop_two_seconds=`echo $output | awk  'BEGIN { FS = " " } ; { print $26 }'`
+  loop_three_seconds=`echo $output | awk  'BEGIN { FS = " " } ; { print $31 }'`
+  total_seconds=`echo $output | awk  'BEGIN { FS = " " } ; { print $35 }'`
+  gflops=`echo $output | awk  'BEGIN { FS = " " } ; { print $39 }'`
+  gbs=`echo $output | awk  'BEGIN { FS = " " } ; { print $42 }'`
+  answer=`echo $output | awk  'BEGIN { FS = " " } ; { print $45 }'`
+
+  loop_zero_seconds_total=`echo "scale=7;$loop_zero_seconds_total+$loop_zero_seconds" | bc`
+  loop_one_seconds_total=`echo "scale=7;$loop_one_seconds_total+$loop_one_seconds" | bc`
+  loop_two_seconds_total=`echo "scale=7;$loop_two_seconds_total+$loop_two_seconds" | bc`
+  loop_three_seconds_total=`echo "scale=7;$loop_three_seconds_total+$loop_three_seconds" | bc`
+  total_seconds_total=`echo "scale=7;$total_seconds_total+$total_seconds" | bc`
+  gflops_total=`echo "scale=7;$gflops_total+$gflops" | bc`
+  gbs_total=`echo "scale=7;$gbs_total+$gbs" | bc`
+  answer_total=`echo "scale=7;$answer_total+$answer" | bc`
+
+  echo $output
+done
+avg_gflops=`echo "scale=7;$gflops_total / $iter" | bc`
+avg_loop_zero_seconds=`echo "scale=7;$loop_zero_seconds_total / $iter" | bc`
+avg_loop_one_seconds=`echo "scale=7;$loop_one_seconds_total / $iter" | bc`
+avg_loop_two_seconds=`echo "scale=7;$loop_two_seconds_total / $iter" | bc`
+avg_loop_three_seconds=`echo "scale=7;$loop_three_seconds_total / $iter" | bc`
+avg_total_seconds=`echo "scale=7;$total_seconds_total / $iter" | bc`
+avg_gflops=`echo "scale=7;$gflops_total / $iter" | bc`
+avg_gbs=`echo "scale=7;$gbs_total / $iter" | bc`
+avg_answer=`echo "scale=7;$answer_total / $iter" | bc`
+
+echo "all averages determined by chopping of rest of the float, i.e. rounded down to smallest dp"
+echo "average loop zero (seconds): $avg_loop_zero_seconds"
+echo "average loop one (seconds): $avg_loop_one_seconds"
+echo "average loop two (seconds): $avg_loop_two_seconds"
+echo "average loop three (seconds): $avg_loop_three_seconds"
+echo "average total (seconds): $avg_total_seconds"
+echo "average gflops: $avg_gflops"
+echo "average gbs: $avg_gbs"
+echo "average answer: $avg_answer"
+
+# echo "average gflops: $avg"

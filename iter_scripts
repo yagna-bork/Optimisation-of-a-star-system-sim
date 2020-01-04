@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+for((i=100;i<=1000;i=$i+100))
+do
+  ./script 10 $i $i
+done
